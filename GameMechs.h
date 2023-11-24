@@ -25,6 +25,10 @@ class GameMechs
         int boardSizeX;
         int boardSizeY;
 
+        int score;
+
+
+
     public:
         GameMechs();
         GameMechs(int boardX, int boardY);
@@ -38,6 +42,9 @@ class GameMechs
 
         int getBoardSizeX();
         int getBoardSizeY();
+
+        int getScore();
+        void incrementScore();
       
 
 };

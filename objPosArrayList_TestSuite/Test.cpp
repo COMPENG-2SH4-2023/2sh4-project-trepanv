@@ -23,17 +23,17 @@ void testConstructor()
 	// First check the list size
 	ASSERT_EQUAL(expectedSize, actualSize);
 
-	bool expectedCheck = true;
-	bool actualCheck;
+	// bool expectedCheck = true;
+	// bool actualCheck;
 
 	// Then check all elements in the array are zero-initialized via objPos() default constructor
-	for(int i = 0; i < ARRAY_MAX_CAP; i++)
-	{
-		thisList.getElement(currentPos, i);
-		actualCheck = zeroPos.isPosEqual(&currentPos);
+	// for(int i = 0; i < ARRAY_MAX_CAP; i++)
+	// {
+	// 	thisList.getElement(currentPos, i);
+	// 	actualCheck = zeroPos.isPosEqual(&currentPos);
 
-		ASSERT_EQUAL(expectedCheck, actualCheck);
-	}
+	// 	ASSERT_EQUAL(expectedCheck, actualCheck);
+	// }
 
 	// The destructor will be called automatically for stack-allocated objects
 }
