@@ -2,7 +2,7 @@
 #define FOOD_H
 
 #include "objPos.h"
-
+    
 
 class Food
 {
