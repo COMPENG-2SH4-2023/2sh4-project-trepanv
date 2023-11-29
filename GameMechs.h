@@ -27,6 +27,8 @@ class GameMechs
 
         int score;
 
+        objPos foodPos;
+
 
 
     public:

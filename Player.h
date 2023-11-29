@@ -17,22 +17,25 @@ class Player
         enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
 
 
-        Player(GameMechs* thisGMRef);
+        Player(GameMechs* thisGMRef, objPosArrayList* snake);
         ~Player();
 
-        void getPlayerPos(objPos &returnPos); // Upgrade this in iteration 3.
+        objPosArrayList*& getPlayerPos(); // Upgrade this in iteration 3.
         void updatePlayerDir(char input);
         void movePlayer(char input);
 
-        // void dir_log();
+        void generateFood();
+        void getFoodPos(objPos &returnPos);
+
+
         
     private:
-        objPos playerPos;   // Upgrade this in iteration 3.       
+        objPosArrayList* body;   // Upgrade this in iteration 3.       
+        objPos foodPos;
+        
         enum Dir myDir;
         enum Dir oldDir;
-        
-        int dir_tracker[2]; // Direction Tracker = [new, old]
-        int old_DIR;
+
 
         // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;

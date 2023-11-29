@@ -1,18 +1,23 @@
 #include "Player.h"
 #include "GameMechs.h"
 #include "MacUILib.h"
-#include "objPos.h"
+#include "objPosArrayList.h"
 
 
+#include <cstdlib>
+#include <ctime>
 
-Player::Player(GameMechs* thisGMRef)
+Player::Player(GameMechs* thisGMRef, objPosArrayList* snake)
 {
     mainGameMechsRef = thisGMRef;
+    body = snake;
+
     myDir = STOP;
 
     // more actions to be included
-    
-    playerPos.setObjPos(5, 5, '*');
+
+    objPos head = {10, 8, '*'};
+    snake->insertTail(head);
 
 }
 
@@ -22,13 +27,11 @@ Player::~Player()
     // delete any heap members here
 }
 
-void Player::getPlayerPos(objPos &returnPos)
+objPosArrayList*& Player::getPlayerPos()
 {
-    // return the reference to the playerPos arrray list
-    returnPos.x =  playerPos.x;
-    returnPos.y =  playerPos.y;
-    returnPos.symbol =  playerPos.symbol;
-
+    // return the reference to the body
+    
+    return body;
 
 }
 
@@ -72,6 +75,8 @@ void Player::updatePlayerDir(char input)
 
 }
 
+//try switching direction check to update player direction
+
 void Player::movePlayer(char input)
 {
     // PPA3 Finite State Machine logic
@@ -88,16 +93,45 @@ void Player::movePlayer(char input)
 
         else
         {        
-            playerPos.y -= 1;
+        
+            objPos curPos;
 
-            if (playerPos.y == 0)
+            // Accessing and Editing Head
+
+            body->getHeadElement(curPos);
+            
+            curPos.y -= 1;
+
+            if (curPos.y == 0)
             {
-                playerPos.y = 14;
+                curPos.y = 13;
             }
+
+                        
+            // Collision Logic
+
+            if(foodPos.x == curPos.x && foodPos.y == curPos.y)
+            {
+                
+
+                body->insertHead(curPos);
+                generateFood();
+
+            }
+
+            else
+            {
+                body->insertHead(curPos);
+                body->removeTail();
+
+            }
+
+
         }
 
 
         break;
+
 
     case DOWN: // moving DOWN
 
@@ -109,14 +143,40 @@ void Player::movePlayer(char input)
 
         else
         {           
-            playerPos.y += 1;
-
-
-            if (playerPos.y == 14)
-            {
-                playerPos.y = 1;
-            }
         
+            objPos curPos;
+
+            // Accessing and Editing Head
+
+            body->getHeadElement(curPos);
+            
+            curPos.y += 1;
+
+            if (curPos.y == 14)
+            {
+                curPos.y = 1;
+            }
+
+            // Collision Logic
+
+            if(foodPos.x == curPos.x && foodPos.y == curPos.y)
+            {
+                
+
+                body->insertHead(curPos);
+                generateFood();
+
+            }
+
+            else
+            {
+                body->insertHead(curPos);
+                body->removeTail();
+                
+            }
+
+
+
         }
 
         
@@ -133,12 +193,38 @@ void Player::movePlayer(char input)
 
         else
         {        
-            playerPos.x -= 1;
 
-            if (playerPos.x == 0)
+            objPos curPos;
+
+            // Accessing and Editing Head
+
+            body->getHeadElement(curPos);
+            
+            curPos.x -= 1;
+
+            if (curPos.x == 0)
             {
-                playerPos.x = 28;
+                curPos.x = 28;
             }
+
+            // Collision Logic
+
+            if(foodPos.x == curPos.x && foodPos.y == curPos.y)
+            {
+                
+
+                body->insertHead(curPos);
+                generateFood();
+
+            }
+
+            else
+            {
+                body->insertHead(curPos);
+                body->removeTail();
+                
+            }
+
 
         }
 
@@ -154,13 +240,38 @@ void Player::movePlayer(char input)
 
         else
         {        
-            playerPos.x += 1;
 
+            objPos curPos;
 
-            if (playerPos.x == 29)
+            // Accessing and Editing Head
+
+            body->getHeadElement(curPos);
+            
+            curPos.x += 1;
+
+            if (curPos.x == 29)
             {
-                playerPos.x = 1;
+                curPos.x = 1;
             }
+
+            // Collision Logic
+
+            if(foodPos.x == curPos.x && foodPos.y == curPos.y)
+            {
+                
+
+                body->insertHead(curPos);
+                generateFood();
+
+            }
+
+            else
+            {
+                body->insertHead(curPos);
+                body->removeTail();
+                
+            }
+
 
         }
         break;
@@ -173,5 +284,37 @@ void Player::movePlayer(char input)
 
 
     oldDir = myDir;
+    
+    
+
+
+
 
 }
+
+void Player::generateFood()
+{
+    //add generation checks
+    
+    int sizeX = mainGameMechsRef->getBoardSizeX();
+    int sizeY = mainGameMechsRef->getBoardSizeY();
+
+    std::srand(std::time(0));
+
+    foodPos.x = 1 + std::rand() % (sizeY - 2 - 1 + 1);
+    foodPos.y = 1 + std::rand() % (sizeX - 2  - 1 + 1);
+
+    foodPos.symbol = 'o';
+
+}
+
+
+void Player::getFoodPos(objPos &returnPos)
+{
+
+    returnPos.x = foodPos.x;
+    returnPos.y = foodPos.y;
+    returnPos.symbol = foodPos.symbol;
+
+}
+
