@@ -26,6 +26,7 @@ class Player
 
         void generateFood();
         void getFoodPos(objPos &returnPos);
+        int checkSelfCollision();
 
 
         

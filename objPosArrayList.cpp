@@ -1,8 +1,7 @@
 #include "objPosArrayList.h"
 // #include <iostream>
 
-// Check lecture contents on general purpose array list construction, 
-// and modify it to support objPos array list construction.
+
 
 objPosArrayList::objPosArrayList() : sizeList(0), sizeArray(200) 
 { 
@@ -57,7 +56,7 @@ void objPosArrayList::removeHead()
     if (sizeList > 0) 
     {
         for (int i = 0; i < sizeList - 1; ++i) {
-            aList[i] = aList[i + 1];
+            aList[i] = aList[i + 1]; // Reassinging Indexes
         }
         sizeList--;
     }
@@ -68,7 +67,7 @@ void objPosArrayList::removeTail()
 {
     if(sizeList > 0)
     {
-        // aList[sizeList] = ; How delete index? 
+        
         sizeList--;
     }
 
@@ -76,7 +75,8 @@ void objPosArrayList::removeTail()
 
 void objPosArrayList::getHeadElement(objPos &returnPos)
 {
-    if (sizeList > 0) {
+    if (sizeList > 0) 
+    {
         returnPos = aList[0];
     }
 
@@ -102,5 +102,3 @@ void objPosArrayList::getElement(objPos &returnPos, int index)
     }
 }
 
-
-// ADD IF STATEMENTS FOR ERROR HANDLING?

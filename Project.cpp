@@ -13,32 +13,29 @@ using namespace std;
 
 
 
+// GLOBAL VARIABLES
+
 char input; // Program Input
 
 GameMechs myGame(15, 30);
 objPosArrayList body;
+objPos myFoodPos;
+
 
 Player myPlayer(&myGame, &body);
-
-
-
-objPosArrayList*& bodyRef = myPlayer.getPlayerPos(); //Reference to Body
-
 
 int sizeX = myGame.getBoardSizeX(); 
 int sizeY = myGame.getBoardSizeY();
 
 
-
-objPos myFoodPos;
-
-
-
 char game_board[15][30];
-
-
-
 bool exitFlag;
+bool loseFlag;
+
+
+
+
+// FUNCTION PROTOTYPES
 
 void Initialize(void);
 void GetInput(void);
@@ -49,22 +46,9 @@ void CleanUp(void);
 
 
 
-objPos head;
-
-
-
 int main(void)
 {
 
-    
-
-    // objPos head(10, 8, '*');
-
-    // body.insertTail(head);
-
-    // objPosArrayList*& bodyRef = myPlayer.getPlayerPos(); //Reference to Body
-
-    myPlayer.generateFood();
 
     Initialize();
 
@@ -85,7 +69,7 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
-
+    myPlayer.generateFood(); // Initial Random Food Generation
 
     exitFlag = false;
 }
@@ -93,44 +77,33 @@ void Initialize(void)
 void GetInput(void)
 {
     
-    input = myGame.getInput(); 
+    input = myGame.getInput(); // Storing Input
 
     
 }
 
 void RunLogic(void)
 {
-    // Food Generated
 
-    myPlayer.getFoodPos(myFoodPos); // Update Food Position
-
-
-    myPlayer.updatePlayerDir(input); // Update Direction
-
-
-    myPlayer.movePlayer(input); // Update Player Position 
+    // Checking Loosing Condition
+    loseFlag = myGame.getLoseFlagStatus();
     
 
-    myPlayer.getFoodPos(myFoodPos); // Update Food Position
+    // Update Food Position
+    myPlayer.getFoodPos(myFoodPos); 
 
-    body = *bodyRef;
+
+    // Update Direction
+    myPlayer.updatePlayerDir(input); 
 
 
-    // // Collision Logic
-
-    // body.getHeadElement(head);
-
-    // if(myFoodPos.x == head.x && myFoodPos.y == head.y)
-    // {
-        
-              
-        
-    //     myPlayer.generateFood();
-    //     myPlayer.getFoodPos(myFoodPos);
+    // Update Player Position After Meeting Required Checks
+    /* contains collision logic */
+    myPlayer.movePlayer(input);  
+    
 
 
 
-    // }
 
 
 
@@ -142,7 +115,7 @@ void DrawScreen(void)
 
 
 
-    // Populating Game Board Frame
+    // Populating Game Board
     for (int row = 0; row < sizeX; row++)
     {
 
@@ -160,7 +133,7 @@ void DrawScreen(void)
             }
 
 
-            // Non Player Objects
+            // Accessing Food Items
             
             else if (row == myFoodPos.y && column == myFoodPos.x) // Player Object
             {
@@ -173,7 +146,7 @@ void DrawScreen(void)
                 game_board[row][column] = ' ';
             }
 
-            // Accessing Player Body
+            // Accessing Body Items
 
             
             for (int i = 0; i < body.getSize(); ++i) 
@@ -198,7 +171,7 @@ void DrawScreen(void)
     }
 
 
-
+    // Printing Game Board 
     for (int row = 0; row < sizeX; row++)
     {
 
@@ -212,23 +185,26 @@ void DrawScreen(void)
     }
 
 
-    // Display Information
 
-    printf("%c\n", input);
-    printf("%d\n", body.getSize()-1); // Score
+    // UI Information
+
+    printf("Score: %d\n", body.getSize()-1); // Score
         
-        MacUILib_printf("\n");
+    MacUILib_printf("Board Size: 15 x 30 \n");
 
-     MacUILib_printf("Food: \n");
-    printf("%d\n", myFoodPos.x);
-    printf("%d\n", myFoodPos.y);
+ 
+    
+    // Printing Game Loss Condiiton
+    if(loseFlag == 1)
+    {
+        
+        exitFlag = myGame.getExitFlagStatus();
+        MacUILib_clearScreen();
 
-     MacUILib_printf("Head: \n");
-    printf("%d\n", head.x);
-    printf("%d\n", head.y);
+        MacUILib_printf("Your Score was: %d\n", body.getSize()-1);
 
 
-
+    }
 
 
 }
@@ -241,7 +217,6 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
-    MacUILib_clearScreen();    
-  
+    
     MacUILib_uninit();
 }
